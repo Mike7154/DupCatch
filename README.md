@@ -184,7 +184,9 @@ Don't forget to give the project a star! Thanks again!
 <!-- LICENSE -->
 ## License
 
-Distributed under the MIT License. See `LICENSE.txt` for more information.
+GNU General Public License. See `LICENSE.txt` for more information.
+You can copy, modify, and distribute this software as you please.
+If you want to use this tool in proprietary software, contact me and I will send a private license agreement.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
