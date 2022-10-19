@@ -1,0 +1,10 @@
+#---------------------------------------------------------
+# py -m pip install -r requirements.txt
+#---------------------------------------------------------
+ruamel.yaml
+fuzzywuzzy[speedup]
+ankisync2
+pattern
+nltk
+tqdm
+pattern

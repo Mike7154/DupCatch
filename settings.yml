@@ -1,0 +1,80 @@
+Duplicates:
+  fields_to_check:
+    - Text
+  check_duplicates_tag: Ankisthesia_AnkiHub
+  compare_to_tag: "#AK_Step2_v12"
+  tags_to_skip:
+    - Delete
+    - Duplicate
+
+Merge:
+  merge_tags: true
+  merge_fields: true
+  tags_to_ignore:
+    - Delete
+    - Duplicate
+    - flag
+    - NotDoing
+  fields_to_ignore:
+  merge_tag_suffix: "::merge"
+
+Remember:
+  non_dupes_tag_suffix: "::nd"
+
+Scoring:
+  cloze_multiplier: 5
+  emphasis_multiplier: 2
+  emphasis_pattern: '[bui]'
+  rare_leveling: 25
+  score_cutoff: 85
+  keep_top: 10
+  keep_top_absolute: 5
+  keep_top_one_direction: 3
+Misc:
+  folder: "/anki_collection/"
+  extension: ".anki2"
+  bin_size: 8000
+  synonyms: #the following will be replaced. Note that these are patterns and certain characters need to be escaped https://www.dataquest.io/blog/regex-cheatsheet/
+    cause:
+      - lead to
+      - "="
+      - results in
+    increase:
+      - a build up of
+      - "↑"
+      - build-up
+      - higher
+      - more
+      - high
+    decrease:
+      - "↓"
+      - deplete
+      - diminished
+      - lower
+      - less
+      - smaller amount
+      - low
+    unchange:
+      - "↔"
+      - no change
+      - remains the same
+      - unchanged
+      - unchanging
+    a:
+      - a(n)
+      - an
+    beta:
+      - "β"
+      - 'Î²'
+    alpha:
+      - 'α'
+      - "Î±"
+    potassium:
+      - "K\\+"
+      - "K<sup>\\+</sup>"
+    sodium:
+      - "Na\\+"
+      - "Na<sup>\\+</sup>"
+    chloride:
+      - "Cl-"
+      - "Cl<sup>-</sup>"
