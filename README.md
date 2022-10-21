@@ -151,6 +151,13 @@ python dupatch.py
 2. Modify the settings.yml (or settings_template.yml file if settings.yml doesn't yet exist)
  * If you are doing a 'Duplicates' run, at least modify the 'Duplicates' section in settings.yml
  * If you are doing a 'Merge' run, at least modify the 'Merge' section in settings.yml
+3. Run the Script
+  ```sh
+  cd path/to/DupCatch
+  python dupcatch.py -r
+  ```
+  * For a Merge run use -m instead of -r
+
 3. The tool will output a new *.apkg file into DupCatch/anki_collection which will include only notes that were modified
 4. Review the results in Anki (I recommend using the Special Fields Addon to choose whether you want tags or a full import)
 
