@@ -124,6 +124,7 @@ def score_matches(word_df, nids_1, nids_2):  # this scores the word pairs
     worddf_simple = pd.pivot_table(word_df, index=['nid', 'word'],
                                    aggfunc={'weighted_score': np.sum}).reset_index().rename_axis(None)
     special_df = word_df[(word_df.type != 'remaining')]
+    special_df = special_df[special_df['freq'] < 0.01]
     # because it takes a lot of memory to compare every possible word for every note-note combination.
     # -I filter it to only notes that contain at least 1 'special word' in common
     # -special words are words that are within a cloze, bolded, italicized, or underlinzed
@@ -135,11 +136,6 @@ def score_matches(word_df, nids_1, nids_2):  # this scores the word pairs
     special = pd.pivot_table(special_join, index=['nid_x', 'nid_y'],
                              aggfunc={'combined_special': np.sum}).reset_index().rename_axis(None)
     special = special.sort_values("combined_special", axis=0, ascending=False)
-    cutoff = word_rare_score(0.01, mlfiles.load_setting("Scoring", "rare_leveling")) * (
-            mlfiles.load_setting('Scoring', 'cloze_multiplier') + mlfiles.load_setting('Scoring',
-                                                                                       'emphasis_multiplier')) / 2
-    special = special[
-        special['combined_special'] > cutoff]  # if the only special word in common is a word like 'The', skip
     nids1 = list(special['nid_x'])
     nids2 = list(special['nid_y'])
     special = None
@@ -166,6 +162,7 @@ def score_matches(word_df, nids_1, nids_2):  # this scores the word pairs
         worddf_simple1 = worddf_simple[worddf_simple['nid'].isin(nid1_bin)]
         worddf_simple2 = worddf_simple[worddf_simple['nid'].isin(nid2_bin)]
         binjoin = pd.merge(worddf_simple1, worddf_simple2, on='word', how='inner')
+        binjoin.reset_index(inplace=True)
         binjoin['nidnid'] = binjoin['nid_x'] + binjoin["nid_y"]
         binjoin = binjoin[~binjoin['nidnid'].isin(completed_pairs)]
         binjoin = binjoin[binjoin['nidnid'].isin(nidnid)]
