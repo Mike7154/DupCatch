@@ -4,7 +4,11 @@
 ruamel.yaml
 fuzzywuzzy[speedup]
 ankisync2
+anki
 pattern
 nltk
 tqdm
 pattern
+python-slugify
+pandas
+numpy

@@ -1,6 +1,4 @@
 # DupCatch: The Anki Duplicates Finder
-DupCatch V 2.0.0
-
 <!-- Improved compatibility of back to top link: See: https://github.com/othneildrew/Best-README-Template/pull/73 -->
 <a name="readme-top"></a>
 <!--
@@ -37,7 +35,7 @@ DupCatch V 2.0.0
     <img src="images/logo.png" alt="Logo" width="80" height="80">
   </a>
 -->
-<h3 align="center">DupCatch</h3>
+<h3 align="center">DupCatch V2.0.1</h3>
 
   <p align="center">
     The Anki Duplicates Finder
@@ -94,45 +92,52 @@ Here's a blank template to get started: To avoid retyping too much info. Do a se
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
-
 -->
+### Description
+  I built to identify duplicate notes in Anki. The built in Anki tool only works if the field is identical. This tool will calculate a similarity score between each note-note pair and rank the most similar notes to identify the non-identical duplicates
+
+  There are two functions.
+  1. Find Duplicates
+   * This will tag all of the likely duplicate pairs (for review) sorted by most similar based on the algorithm
+  2. Merge
+   * You can use this tool to merge duplicate fields or tags.
 ### Built With
 
 * [![Python][Python]][Python-url]
-
+<!--
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
-
-
-
+-->
 <!-- GETTING STARTED -->
 ## Getting Started
-
-This is an example of how you may give instructions on setting up your project locally.
-To get a local copy up and running follow these simple example steps.
-
+  I have only tested this on Windows running python 3.9, but it should work on other operating systems as well
 ### Prerequisites
-
-This is an example of how to list things you need to use the software and how to install them.
-* npm
-  ```sh
-  npm install npm@latest -g
-  ```
+* Python 3.9 +
+* Python libraries from requirements.txt
 
 ### Installation
 
-1. Get a free API Key at [https://example.com](https://example.com)
-2. Clone the repo
-   ```sh
-   git clone https://github.com/Mike7154/DupCatch.git
-   ```
-3. Install NPM packages
-   ```sh
-   npm install
-   ```
-4. Enter your API in `config.js`
-   ```js
-   const API_KEY = 'ENTER YOUR API';
-   ```
+1. Clone or download and unzip the repo
+  ```sh
+  git clone https://github.com/Mike7154/DupCatch.git
+  ```
+2. Install dependencies (must have python installed and mapped)
+  ```sh
+  pip install -r requirements
+  ```
+  or
+  ```sh
+  py -m pip install -r requirements
+  ```
+3. You can verify the installation by running:
+```sh
+cd path/to/DupCatch
+py dupcatch.py
+```
+or
+```sh
+cd path/to/DupCatch
+python dupatch.py
+```
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -141,9 +146,13 @@ This is an example of how to list things you need to use the software and how to
 <!-- USAGE EXAMPLES -->
 ## Usage
 
-Use this space to show useful examples of how a project can be used. Additional screenshots, code examples and demos work well in this space. You may also link to more resources.
+1. Copy the desired Anki package file (*.apkg, *.colpkg) to 'Dupcatch/anki_collection'
 
-_For more examples, please refer to the [Documentation](https://example.com)_
+2. Modify the settings.yml (or settings_template.yml file if settings.yml doesn't yet exist)
+ * If you are doing a 'Duplicates' run, at least modify the 'Duplicates' section in settings.yml
+ * If you are doing a 'Merge' run, at least modify the 'Merge' section in settings.yml
+3. The tool will output a new *.apkg file into DupCatch/anki_collection which will include only notes that were modified
+4. Review the results in Anki (I recommend using the Special Fields Addon to choose whether you want tags or a full import)
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -227,7 +236,7 @@ Project Link: [https://github.com/Mike7154/DupCatch](https://github.com/Mike7154
 [license-shield]: https://img.shields.io/github/license/Mike7154/DupCatch.svg?style=for-the-badge
 [license-url]: https://github.com/Mike7154/DupCatch/blob/master/LICENSE.txt
 [linkedin-shield]: https://img.shields.io/badge/-LinkedIn-black.svg?style=for-the-badge&logo=linkedin&colorB=555
-[linkedin-url]: https://linkedin.com/in/linkedin_username
+[linkedin-url]: https://linkedin.com/in/https://www.linkedin.com/in/michaelelarsen15/
 [product-screenshot]: images/screenshot.png
 [Python]: https://img.shields.io/badge/Python-000000?style=for-the-badge&logo=python&logoColor=white
 [Python-url]: https://www.python.org/
