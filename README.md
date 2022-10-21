@@ -157,7 +157,7 @@ python dupatch.py
   python -m pip install -r requirements.txt
   python dupcatch.py -r
   ```
-  * For a Merge run use ```sh python dupcatch.py -m ```
+  * For a Merge run use ```python dupcatch.py -m ```
 
 3. The tool will output a new *.apkg file into DupCatch/anki_collection which will include only notes that were modified
 4. Review the results in Anki (I recommend using the Special Fields Addon to choose whether you want tags or a full import)
