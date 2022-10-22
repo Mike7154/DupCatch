@@ -8,6 +8,7 @@ import mltext
 import anki_functions
 import datetime
 from anki.collection import Collection
+from fuzzywuzzy import fuzz
 
 
 def word_rare_score(freq, leveling=10):
@@ -119,11 +120,11 @@ def build_clean_dict(notes_using, fields):
         dict.update({note.id: clean_string})
     return dict
 
-
 def score_matches(word_df, nids_1, nids_2):  # this scores the word pairs
     worddf_simple = pd.pivot_table(word_df, index=['nid', 'word'],
                                    aggfunc={'weighted_score': np.sum}).reset_index().rename_axis(None)
     special_df = word_df[(word_df.type != 'remaining')]
+    special_df = special_df[special_df['freq'] < 0.01]
     # because it takes a lot of memory to compare every possible word for every note-note combination.
     # -I filter it to only notes that contain at least 1 'special word' in common
     # -special words are words that are within a cloze, bolded, italicized, or underlinzed
@@ -135,18 +136,13 @@ def score_matches(word_df, nids_1, nids_2):  # this scores the word pairs
     special = pd.pivot_table(special_join, index=['nid_x', 'nid_y'],
                              aggfunc={'combined_special': np.sum}).reset_index().rename_axis(None)
     special = special.sort_values("combined_special", axis=0, ascending=False)
-    cutoff = word_rare_score(0.01, mlfiles.load_setting("Scoring", "rare_leveling")) * (
-            mlfiles.load_setting('Scoring', 'cloze_multiplier') + mlfiles.load_setting('Scoring',
-                                                                                       'emphasis_multiplier')) / 2
-    special = special[
-        special['combined_special'] > cutoff]  # if the only special word in common is a word like 'The', skip
     nids1 = list(special['nid_x'])
     nids2 = list(special['nid_y'])
     special = None
     del special
     word_df = None
     del word_df
-    bin_number = round(len(nids1) / mlfiles.load_setting('Misc', 'bin_size') + 1)
+    bin_number = round(len(nids1) / mlfiles.load_setting('Misc', 'bin2_size') + 1)
     # I split the next step into bins to avoid maxing out ram
     nids1_split = np.array_split(nids1, bin_number)
     nids2_split = np.array_split(nids2, bin_number)
@@ -166,6 +162,7 @@ def score_matches(word_df, nids_1, nids_2):  # this scores the word pairs
         worddf_simple1 = worddf_simple[worddf_simple['nid'].isin(nid1_bin)]
         worddf_simple2 = worddf_simple[worddf_simple['nid'].isin(nid2_bin)]
         binjoin = pd.merge(worddf_simple1, worddf_simple2, on='word', how='inner')
+        binjoin.reset_index(inplace=True)
         binjoin['nidnid'] = binjoin['nid_x'] + binjoin["nid_y"]
         binjoin = binjoin[~binjoin['nidnid'].isin(completed_pairs)]
         binjoin = binjoin[binjoin['nidnid'].isin(nidnid)]
@@ -205,6 +202,12 @@ def score_matches(word_df, nids_1, nids_2):  # this scores the word pairs
     final_scores['score_x'] = final_scores['weighted_score_x'] / final_scores['note_max_x']  # calculate forward score
     final_scores['score_y'] = final_scores['weighted_score_y'] / final_scores['note_max_y']  # calculate reverse score
     final_scores = final_scores.sort_values("score", axis=0, ascending=False)
+    output_scores = build_output_scores(final_scores)
+    final_scores = None
+    del final_scores
+    return output_scores
+
+def build_output_scores(final_scores):
     cutoff_final = final_scores[final_scores['score'] > mlfiles.load_setting('Scoring', "score_cutoff")]
     cutoff_final = cutoff_final.drop_duplicates(subset='nidnid', keep='first')
     mlfiles.update_log("found " + str(len(cutoff_final.index)) + " note pairs that meet the score cutoff")
@@ -220,24 +223,29 @@ def score_matches(word_df, nids_1, nids_2):  # this scores the word pairs
     output_scores = output_scores.append(top_x)
     output_scores = output_scores.append(top_y)
     output_scores = output_scores.drop_duplicates()
-    final_scores = None
-    del final_scores
-    output_scores.drop_duplicates(subset='nidnid', keep='first', inplace=True)
+    output_scores = output_scores.sort_values("score", axis=0, ascending=False)
     return output_scores
-
-
 def tag_duplicates(anki, output_scores):
     mlfiles.update_log('Tagging ' + str(len(output_scores)) + ' note pairs')
     notes_1 = list(output_scores['nid_x'])
     notes_2 = list(output_scores['nid_y'])
+    scores = list(output_scores['new_score'])
     i = 0
     now = datetime.datetime.now()
     date_string = now.strftime('%Y-%m-%d_%H:%M')
+    if len(notes_1) > 999:
+        zf = 4
+    elif len(notes_1) > 99:
+        zf = 3
+    else:
+        zf = 2
     for i in range(len(notes_1)):
-        tag = "~DupCatch_V2::D" + date_string + "::" + str(i).zfill(4)
+        score = scores[i]
+        score = round(score - 0.45)
+        tag = "~DupCatch_V2::D" + date_string + "::" + str(i).zfill(zf) + "." + str(score)
         pair = [notes_1[i], notes_2[i]]
         for nid in pair:
-            mlfiles.print_log("Tagging Note " + nid + " with the tag " + tag)
+            mlfiles.print_log("Tagging Note " + str(nid) + " with the tag " + tag)
             note = anki.get_note(int(nid))
             note.add_tag(tag)
             anki.update_note(note)
@@ -267,13 +275,27 @@ def run_duplicate_finder():
     notes_2 = notes.select().where(notes.tags.contains(compare_to_tag) & notes.id.not_in(notes_to_skip))
     notes_using = notes_1 | notes_2
     mlfiles.update_log(str(len(notes_1)) + ' notes will be compared to ' + str(len(notes_2)) + ' notes.')
-    # clean_words = build_clean_dict(notes_using, fields)
+    clean_words = build_clean_dict(notes_using, fields)
     mlfiles.update_log("Building a word dataframe for the selected notes")
     word_df = build_word_df(notes_using, fields)
     nids_1 = [n.id for n in notes_1]
     nids_2 = [n.id for n in notes_2]
-    output_scores = score_matches(word_df, nids_1, nids_2)
-    output_scores.drop_duplicates(inplace=True)
+    bin_number = round(len(nids_1) / mlfiles.load_setting('Misc', 'bin_size') + 1)
+    nids1_split = np.array_split(nids_1, bin_number)
+    out_scores_list = []
+    for i in range(len(nids1_split)):
+        mlfiles.print_log("Running bin " + str(i+1) + ' of ' + str(len(nids1_split)))
+        nids_1 = nids1_split[i]
+        output_scores = score_matches(word_df, nids_1, nids_2)
+        set1 = set(nids_2)
+        set2 = set(nids_1)
+        nids_2 = list(set1 - set2)
+        out_scores_list.append(output_scores)
+    output_scores = pd.concat(out_scores_list, ignore_index=True)
+    output_scores = build_output_scores(output_scores)
+    output_scores.drop_duplicates(subset='nidnid', keep='first', inplace=True)
+    output_scores = level_fuzz_scores(output_scores, clean_words)
+    output_scores = output_scores.sort_values("new_score", axis=0, ascending=False)
     word_df = None
     del word_df
     anki.close()
@@ -295,14 +317,21 @@ def run_duplicate_finder():
     #     mlfiles.print_log('---------------------------------------------')
     col.close()
     delete_unchanged_records(collection_file, ids_to_keep)
-    new_file_path = re.sub("[.]", "_notes_merged.", anki_file)
+    new_file_path = re.sub("[.]", "dupes_tagged.", anki_file)
     file_path = 'bin/collection/output.apkg'
     export_apkg_file(collection_file, file_path, new_file_path)
     mlfiles.update_log('DUPLICATES RUN COMPLETE - Exported results to ' + new_file_path)
     mlfiles.update_log('-------------------------------------------------------------')
     mlfiles.clear_folder("bin/collection")
 
-
+def level_fuzz_scores(score_df, clean_words):
+    score_df['words_x'] = score_df['nid_x'].apply(lambda x: clean_words[x])
+    score_df['words_y'] = score_df['nid_y'].apply(lambda x: clean_words[x])
+    score_df['fuzzwscore'] = score_df.apply(lambda x: fuzz.WRatio(x.words_x, x.words_y), axis = 1)
+    score_df['len_words'] = score_df['words_y'].apply(len) + score_df['words_x'].apply(len)
+    score_df['score'] = np.where(score_df['len_words'] < 100, score_df['score'] / (2 - ((1 / 100) * score_df['len_words'])), score_df['score'])
+    score_df['new_score'] = (score_df['score'] * 7 + score_df['fuzzwscore'] * 3) / 10
+    return score_df
 def export_apkg_file(anki2_file, file_path, new_file_path):
     col = Collection(anki2_file)
     col.export_anki_package(out_path=file_path, limit=90000, with_scheduling=False, with_media=False,

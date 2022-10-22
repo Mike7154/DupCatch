@@ -35,7 +35,7 @@
     <img src="images/logo.png" alt="Logo" width="80" height="80">
   </a>
 -->
-<h3 align="center">DupCatch V2.0.1</h3>
+<h3 align="center">DupCatch V2.0.1.beta</h3>
 
   <p align="center">
     The Anki Duplicates Finder
@@ -161,6 +161,8 @@ python dupatch.py
 
 3. The tool will output a new *.apkg file into DupCatch/anki_collection which will include only notes that were modified
 4. Review the results in Anki (I recommend using the Special Fields Addon to choose whether you want tags or a full import)
+5. Tag the notes to merge fields, tags, or mark as 'not duplicate' or 'covered_by'
+ * only the merge tags are directional, and you only tag the receiving note.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 

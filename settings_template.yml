@@ -1,4 +1,4 @@
-Duplicates:
+Duplicates: #Change this section if you want to do a duplicates run
   fields_to_check:
     - Text
   check_duplicates_tag: Ankisthesia_AnkiHub
@@ -11,46 +11,48 @@ Duplicates:
 Merge:
   merge_tags: true
   merge_fields: true
-  tags_to_ignore: #These match any tags that CONTAIN the followingAaw`ww`2ww  `1ED  `1R 1R
+  tags_to_ignore: #When merging tags, ignore tags that CONTAIN the following
     - ~DupCatch
     - Delete
     - Duplicate
     - flag
     - NotDoing
-  fields_to_ignore:
+  fields_to_ignore: #Sender and receiver fields to ignore when combining fields
     - Text
     - Front
     - Back
-  field_seperator: "<br>"
-  merge_suffix: "::merge"
-  merge_tags_suffix: "::mtags"
-  merge_fields_suffix: "::mfields"
-  map_missing_field: Additional Resources
-  covered_by_tag: "!Covered_By::(DECK)"
-  covered_by_suffix: "::cb"
+  field_seperator: "<br>"                     #When fields are appended, seperate with this
+  merge_suffix: "::merge"                     #Tagged note pairs (from a duplicates run) with this tag appended to the tag will mark the pair to be merged. The one with this tag is the receiver
+  merge_tags_suffix: "::mtags"                #The note-pair with this tag appended will be the receiver for 'combine tags' only
+  merge_fields_suffix: "::mfields"            #the note-pair with this tag appended will be the receiver for 'combine fields'
+  map_missing_field: Additional Resources     #Receiver field to add fields when their is not a matching field name
+  covered_by_tag: "!Covered_By::(DECK)"       #Covered by tag when covered_by_suffix is added
+  covered_by_suffix: "::cb"                   #When this is added to a note pair tag, add covered_by_tag to both notes
 
 Remember:
-  non_dupes_tag_suffix: "::nd"
+  non_dupes_tag_suffix: "::nd" #When this is added to a note-note pair,
 
-Scoring:
-  cloze_multiplier: 5                                       #Word-scores will be multiplied by this factor for words inside a cloze
-  emphasis_multiplier: 2                                    #words that are inside of an html tag (ie. bold, underline, italics) will be multiplied by this factor
-  emphasis_pattern: '[bui]'                                 #pattern to match html tags, default [bui] for bold, underline, and italics
-  rare_leveling: 25                                         #higher numbers will score rare words higher
-  score_cutoff: 75                                          #Cutoff score to tag pairs
-  keep_top: 15                                              #Keep top n cards even if they don't meet score_cutoff
-  keep_top_absolute: 5                                      #scores are percentages, but this will keep the top absolute (non-percentage) scores. These cards of lots of words in common with no regard to uncommon
-  keep_top_one_direction: 3                                 #There is a forward and backword score to find the n-cards that might only match in one direction (ie. a card contains two facts so does not match either duplicate)
+Scoring: #This section will determine how it scores and how many results you get
+  cloze_multiplier: 5                         #Word-scores will be multiplied by this factor for words inside a cloze
+  emphasis_multiplier: 2                      #words that are inside of an html tag (ie. bold, underline, italics) will be multiplied by this factor
+  emphasis_pattern: '[bui]'                   #pattern to match html tags, default [bui] for bold, underline, and italics
+  rare_leveling: 25                           #higher numbers will score rare words higher
+  score_cutoff: 75                            #Cutoff score to tag pairs
+  keep_top: 15                                #Keep top n cards even if they don't meet score_cutoff
+  keep_top_absolute: 5                        #scores are percentages, but this will keep the top absolute (non-percentage) scores. These cards of lots of words in common with no regard to uncommon
+  keep_top_one_direction: 3                   #There is a forward and backword score to find the n-cards that might only match in one direction (ie. a card contains two facts so does not match either duplicate)
 Misc:
   folder: "anki_collection/"
   non_dupes_dict: bin/non_dupes.json
   template_col: bin/collection.anki2
   extension: "pkg"
-  bin_size: 5000
-  absolute_min_score: 25
-  unimportant_words:
+  bin_size: 5000                              #decrease this size if you are maxing out ram, too low will slow it way down
+  bin2_size: 5000                             #similar to above
+  absolute_min_score: 20                      #absolute min score to include. Increase to 50-70 if you are maxing out ram
+  unimportant_words: #These are words that should not be considered in scoring, because they don't add anything to the fact (ie. qualifiers)
     - typically
     - typical
+    - predominantly
   synonyms: #the following will be replaced. Note that these are patterns and certain characters need to be escaped https://www.dataquest.io/blog/regex-cheatsheet/
     cause:
       - lead to
@@ -95,3 +97,65 @@ Misc:
     chloride:
       - "Cl-"
       - "Cl<sup>-</sup>"
+    bicarbonate:
+      - HCO<sub>3</sub><sup>-</sup>
+      - HCO3-
+    sodium bicarbonate:
+      - NaHCO<sub>3</sub>
+    sodium chloride:
+      - NaCl
+    Tricyclic antidepressants:
+      - TCAs
+    magnesium:
+      - Mg<sup>2\\+</sup>
+      - Mg2\\+
+    calcium:
+      - Ca<sup>2\\+</sup>
+      - Ca2\\+
+    labs:
+      - laboratory exam
+      - lab values
+    alcohol:
+      - ethanol
+      - EtOH
+    hydrogen:
+      - H<sup>\\+</sup>
+      - H\\+
+    carbon dioxide:
+      - CO<sub>2</sub>
+      - CO2
+    oxygen:
+      - O<sub>2</sub>
+      - 'O2'
+    oxygen-hemoglobin:
+      - <b>O<sub>2</sub>-hemoglobin
+      - oxygen-Hgb
+      - oxygen-Hb
+      - <b>O<sub>2</sub>-Hgb
+      - <b>O<sub>2</sub>-Hb
+    carbonic acid:
+      - H<sub>2</sub>CO<sub>3</sub>
+      - H2CO3
+    carried:
+      - transported
+    is:
+      - is/are
+    Type 2 Diabetes Mellitus:
+      - T2DM
+      - Diabetes Mellitus (type 2)
+      - Type two diabetes mellitus
+      - Type 2 DM
+    Type 1 Diabetes Mellitus:
+      - T1DM
+      - Diabetes Mellitus (type 1)
+      - Type one diabetes Mellitus
+      - Type 1 DM
+    Gestational Diabetes Mellitus:
+      - GDM
+    Diabetic ketoacidosis:
+      - DKA
+    Hyperosmolar Hyperglycemic State:
+      - HHS
+    Citric Acid Cycle:
+      - TCA cycle
+      - Krebs cycle
