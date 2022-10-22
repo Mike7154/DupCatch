@@ -35,7 +35,7 @@
     <img src="images/logo.png" alt="Logo" width="80" height="80">
   </a>
 -->
-<h3 align="center">DupCatch V2.0.1-beta</h3>
+<h3 align="center">DupCatch V2.0.1.beta</h3>
 
   <p align="center">
     The Anki Duplicates Finder
