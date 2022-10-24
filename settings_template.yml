@@ -18,6 +18,7 @@ Merge:
     - flag
     - NotDoing
   fields_to_ignore: #Sender and receiver fields to ignore when combining fields
+    - ankihub_id
     - Text
     - Front
     - Back
@@ -30,7 +31,7 @@ Merge:
   covered_by_suffix: "::cb"                   #When this is added to a note pair tag, add covered_by_tag to both notes
 
 Remember:
-  non_dupes_tag_suffix: "::nd" #When this is added to a note-note pair,
+  non_dupes_tag_suffix: "::nd" #When this is added to a note-note pair,it will be remembered as not duplicate and will not be included in subsequent runs
 
 Scoring: #This section will determine how it scores and how many results you get
   cloze_multiplier: 5                         #Word-scores will be multiplied by this factor for words inside a cloze
@@ -49,11 +50,11 @@ Misc:
   bin_size: 5000                              #decrease this size if you are maxing out ram, too low will slow it way down
   bin2_size: 5000                             #similar to above
   absolute_min_score: 20                      #absolute min score to include. Increase to 50-70 if you are maxing out ram
-  unimportant_words: #These are words that should not be considered in scoring, because they don't add anything to the fact (ie. qualifiers)
+  unimportant_words: #These are words that should not be considered in scoring, because they don't add anything to the fact being tested (ie. qualifiers)
     - typically
     - typical
     - predominantly
-  synonyms: #the following will be replaced. Note that these are patterns and certain characters need to be escaped https://www.dataquest.io/blog/regex-cheatsheet/
+  synonyms: #the following are considered identical when scored. Note that these are patterns and certain characters need to be escaped https://www.dataquest.io/blog/regex-cheatsheet/
     cause:
       - lead to
       - "="
