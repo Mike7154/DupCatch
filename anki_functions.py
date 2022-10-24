@@ -31,7 +31,7 @@ def combine_field(receiver_note, giver_note, receiver_field, giver_field, field_
     receiver_note[receiver_field] = new_field
 
 
-def map_note_fields(note1, note2, unmapped_default, ignore_fields=[], field_separator="<br>"):
+def map_note_fields(note1, note2, unmapped_default, ignore_fields=['ankihub_id'], field_separator="<br>"):
     note_1_fields = []
     for (name, value) in note1.items():
         if name not in ignore_fields:

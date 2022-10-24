@@ -387,6 +387,7 @@ def run_merge():
         field_separator = mlfiles.load_setting('Merge', 'field_seperator')
         map_missing_field = mlfiles.load_setting('Merge', 'map_missing_field')
         fields_to_ignore = mlfiles.load_setting('Merge', 'fields_to_ignore')
+        fields_to_ignore.append('ankihub_id')
         mlfiles.update_log("Ignoring fields " + " ".join(fields_to_ignore))
         mlfiles.update_log("Merging the fields of " + str(len(merge_field_nids)) + " note pairs")
         for i in range(len(merge_field_nids)):
