@@ -16,7 +16,7 @@ Pre-requisites
 
     -   pip install -r requirements.txt
 
-Finding Duplicates
+## Finding Duplicates
 
 1.  Export an Anki package file into the folder
     DupCatch/anki_collection.
@@ -52,7 +52,7 @@ Finding Duplicates
     b.  It is a good idea to backup your collection before importing
         this deck into it.
 
-Merge
+## Merge
 
 1.  After a duplicates run, you can tag one or both note pairs to
     designate which notes should be combined.
@@ -133,7 +133,7 @@ Merge
         weird happens so you can revert if needed. Or open in a new
         profile to review.
 
-Settings File
+## Settings File
 
 Settings are in YAML format, which was designed to be easy for human
 input. [YAML File
@@ -142,7 +142,7 @@ quotes are usually not required for text, special characters need to be
 in quotes or escaped. (ie. Quotes are required if the tag starts with \#
 like in \#AK_Original_Decks)
 
-Duplicates -- run with python dupcatch.py -r
+### Duplicates -- run with python dupcatch.py -r
 
 -   Fields_to_check: These are fields that should be compared for
     similarity (ie Text, Front and back, etc)
@@ -158,7 +158,7 @@ Duplicates -- run with python dupcatch.py -r
     '\#AK_Original_Decks' you must include all of the tag up to the end
     of the tag or up to a subtag (ie up to ::)
 
-Merge -- run with python dupcatch.py -m
+### Merge -- run with python dupcatch.py -m
 
 -   **merge_tags**: If 'True' merge tags for note pairs that have either
     merge_suffix or merge_tags_suffix. This is uni-directional: The
@@ -219,7 +219,7 @@ Merge -- run with python dupcatch.py -m
 
 -   **covered_by_suffix:** text to use to denote covered_by (see above)
 
-Remember -- run with python dupcatch.py -m
+### Remember -- run with python dupcatch.py -m
 
 -   **non_dupes_tag_suffix:** Suffix denotes that the note pair is not a
     duplicate and the note pair will note be scored in future runs. The
@@ -230,7 +230,7 @@ Remember -- run with python dupcatch.py -m
     remembered as not a duplicate of any card with the tag
     \[\~DupCatch_V2::D2022-10-22_00:26::001.100\]
 
-Scoring -- How scores are calculated in Duplicates runs
+### Scoring -- How scores are calculated in Duplicates runs
 
 -   **close_multiplier:** words included in clozes will have their 'rare
     score' multiplied by this number
