@@ -145,10 +145,11 @@ python dupatch.py
 
 <!-- USAGE EXAMPLES -->
 ## Usage
+See more detailed instructions at https://1drv.ms/w/s!Ar3STOvKhP6Ymts6IuxRUntBSumx5A?e=h9scEH
 
 1. Copy the desired Anki package file (*.apkg, *.colpkg) to 'Dupcatch/anki_collection'
 
-2. Modify the settings.yml (or settings_template.yml file if settings.yml doesn't yet exist)
+2. Modify the settings.yml (copycv   settings_template.yml file if settings.yml doesn't yet exist)
  * If you are doing a 'Duplicates' run, at least modify the 'Duplicates' section in settings.yml
  * If you are doing a 'Merge' run, at least modify the 'Merge' section in settings.yml
 3. Run the Script
